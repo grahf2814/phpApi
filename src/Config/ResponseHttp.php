@@ -15,4 +15,44 @@ class ResponseHttp
 
         return self::$message;
     }
+    final public static function status201(string $res = 'Recurso creado')
+    {
+        http_response_code(201);
+        self::$message['status']='ok';
+        self::$message['message']=$res;
+
+        return self::$message;
+    }
+    final public static function status400(string $res = 'solicitud enviada incompleta o en formato incorrecto')
+    {
+        http_response_code(400);
+        self::$message['status']='error';
+        self::$message['message']=$res;
+
+        return self::$message;
+    }
+    final public static function status401(string $res = 'no tiene privilegios para acceder al recurso solicitado')
+    {
+        http_response_code(401);
+        self::$message['status']='error';
+        self::$message['message']=$res;
+
+        return self::$message;
+    }
+    final public static function status404(string $res = 'Recurso no existe')
+    {
+        http_response_code(404);
+        self::$message['status']='error';
+        self::$message['message']=$res;
+
+        return self::$message;
+    }
+    final public static function status500(string $res = 'error interno del servidor')
+    {
+        http_response_code(500);
+        self::$message['status']='error';
+        self::$message['message']=$res;
+
+        return self::$message;
+    }
 }
