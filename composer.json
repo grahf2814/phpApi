@@ -1,24 +1,6 @@
 {
-    "name": "boribe/php-api",
-    "description": "Un esqueleto de API para PHP",
-    "autoload": {
-        "psr-4": {
-            "Boribe\\PhpApi\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Benjamin Oribe Mendieta"
-        }
-    ],
-    "config":{
-        "platform":
-        {
-            "php":">=8.1"
-        }
-    },
     "require": {
-        "php":">=8.1",
+        "vlucas/phpdotenv": "^5.5",
         "firebase/php-jwt": "^6.9"
     }
 }
