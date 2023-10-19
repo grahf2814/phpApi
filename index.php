@@ -1,5 +1,9 @@
 <?php
 
+use App\Config\ResponseHttp;
+
+require __DIR__.'/vendor/autoload.php';
+
 if(isset($_GET['route']))
 {
     
@@ -8,10 +12,10 @@ if(isset($_GET['route']))
         'auth',
         'user',
     ];
-    $file = dirname(__DIR__).'src/Routes'.$url[0].'.php';
-    if(!in_array($url[0],$lista))
+    $file = __DIR__.'/src/Routes/'.$url[0].'.php';
+    if(!in_array($url[0],$list))
     {
-        echo 'La Ruta no existe';
+        echo json_encode(ResponseHttp::status200("La ruta no existe"));
         exit;
     }
     if(is_readable($file))
@@ -22,6 +26,7 @@ if(isset($_GET['route']))
     else
     {
         echo "el archivo no existe";
+        echo '<br>'.$file;
     }
 }
 else
