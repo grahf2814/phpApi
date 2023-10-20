@@ -1,3 +1,5 @@
 <?php
+use App\Config\Security;
 
-echo "Entrando a Auth";
+echo json_encode(Security::secretKey());
+

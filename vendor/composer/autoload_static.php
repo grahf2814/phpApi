@@ -77,6 +77,7 @@ class ComposerStaticInitc6f7bcffa743e5ecae906f7fff63dc97
     );
 
     public static $classMap = array (
+        'App\\Config\\ErrorLog' => __DIR__ . '/../..' . '/src/Config/ErrorLog.php',
         'App\\Config\\ResponseHttp' => __DIR__ . '/../..' . '/src/Config/ResponseHttp.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',

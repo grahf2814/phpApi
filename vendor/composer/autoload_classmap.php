@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Config\\ErrorLog' => $baseDir . '/src/Config/ErrorLog.php',
     'App\\Config\\ResponseHttp' => $baseDir . '/src/Config/ResponseHttp.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',

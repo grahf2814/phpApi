@@ -1,8 +1,11 @@
 <?php
 
+use App\Config\ErrorLog;
 use App\Config\ResponseHttp;
 
 require __DIR__.'/vendor/autoload.php';
+
+ErrorLog::activateErrorLog();
 
 if(isset($_GET['route']))
 {
@@ -16,6 +19,7 @@ if(isset($_GET['route']))
     if(!in_array($url[0],$list))
     {
         echo json_encode(ResponseHttp::status400());
+        error_log("esto es una prueba de error");
         exit;
     }
     if(is_readable($file))
