@@ -76,4 +76,5 @@ class Security
         return $jwt_decoded_array['data'];
         exit;
     } 
+    
 }
