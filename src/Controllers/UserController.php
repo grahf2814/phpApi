@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Config\ResponseHttp;
+use App\Config\Security;
 use App\Models\UserModel;
 
 class UserController
@@ -53,11 +54,10 @@ class UserController
     }
     final public function post(string $endPoint)
     {
-        
-        error_log ('Metodo:'.$this->method.', Ruta:'.$this->route.', Endpoint:'.$endPoint);
-        
         if($this->method =='post' && $endPoint==$this->route)
         {
+            Security::validateJWTToken($this->headers,Security::secretKey());
+
             if(empty($this->data['name']) || empty($this->data['dni']) || empty($this->data['email'])|| empty($this->data['rol']) || empty($this->data['password']) || empty($this->data['confirmPassword']))
             {
                 echo json_encode(ResponseHttp::status400('Todos los campos son requeridos.'));
