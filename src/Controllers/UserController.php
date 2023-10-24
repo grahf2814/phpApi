@@ -21,6 +21,36 @@ class UserController
     {
 
     }
+
+
+    final public function getLogin(string $endPoint)
+    {
+        
+        if($this->method =='get' && $endPoint==$this->route)
+        {
+            
+            $email = strtolower($this->params[1]);
+            $password = $this->params[2];
+
+            if(empty($email) || empty($password))
+            {
+                echo json_encode(ResponseHttp::status400('correo y password son obligatorios.'));
+            }
+            else if (!filter_var($email,FILTER_VALIDATE_EMAIL))
+            {
+                echo json_encode(ResponseHttp::status400('Formato de correo incorrecto.'));
+            }
+            else
+            {
+                UserModel::setEmail($email);
+                UserModel::setPassword($password);
+                echo json_encode(UserModel::login());
+                
+            } 
+
+            exit;
+        }
+    }
     final public function post(string $endPoint)
     {
         

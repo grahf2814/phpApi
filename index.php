@@ -34,5 +34,5 @@ if(isset($_GET['route']))
 }
 else
 {
-    echo json_encode(ResponseHttp::status404());
+    echo json_encode(ResponseHttp::status404('Recurso no existe 1'));
 }

@@ -1,19 +1,19 @@
 <?php
-use App\Config\Security;
-use App\db\connectionDB;
 
-echo json_encode(Security::createJWTToken(Security::secretKey(),['hola']));
+use App\Config\ResponseHttp;
+use App\Controllers\UserController;
 
-ConnectionDB::getConnection();
-/* $pass = Security::createPassword('prueba');
+$method = strtolower($_SERVER['REQUEST_METHOD']);
 
-if(Security::validatePassword('prueba',$pass))
-{
-    echo json_encode("contraseña correcta");
-}
-else
-{
-    echo json_encode("algo salió mal");
-}
- */
+$route = $_GET['route'];
+
+$params = explode('/',$route );
+
+$data=json_decode(file_get_contents("php://input"),true);
+$headers = getallheaders();
+
+$app = new UserController($method,$route,$params,$data,$headers);
+
+$app->getLogin("auth/{$params[1]}/{$params[2]}");
+echo json_encode(ResponseHttp::status404("Recurso no existe 2"));
 

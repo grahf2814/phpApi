@@ -7,7 +7,7 @@ class ResponseHttp
         'status'=>'',
         'message'=>''
     );
-    final public static function status200(string $res)
+    final public static function status200( $res)
     {
         http_response_code(200);
         self::$message['status']='ok';

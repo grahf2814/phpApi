@@ -43,6 +43,49 @@ class UserModel extends ConnectionDB
     final public static function setIDToken(string $IDToken){ self::$IDToken=$IDToken;}
     final public static function setDate(string $date){ self::$fecha=$date;}
 
+    final public static function login()
+    {
+        
+        try
+        {
+            $con = self::getConnection()->prepare("SELECT * FROM usuario where correo=:correo");
+            $con->execute(
+                [
+                    ':correo'=>self::getEmail()
+                ]
+                );
+            if($con->rowCount()===0)
+            {
+                return ResponseHttp::status400('El usuario o contraseña son incorrectos');
+            }
+            else
+            {
+                foreach($con as $res)
+                {
+                    if(Security::validatePassword(self::getPassword(),$res['password']))
+                    {
+                        $payload = ['IDToken'=>$res['IDToken']];
+                        $token = Security::createJWTToken(Security::secretKey(),$payload);
+                        $data = 
+                        [
+                            'name'=>$res['nombre'],
+                            'rol'=>$res['rol'],
+                            'token'=>$token
+                        ];
+                        return ResponseHttp::status200($data);
+                        exit;
+                    }
+                }
+            }  
+
+        }
+        catch(\PDOException $e)
+        {
+            error_log('UserModel::Login->'.$e);
+            die(json_encode(ResponseHttp::status500()));
+        }
+        return '';
+    }
     final public static function post()
     {
         if(Sql::exists("SELECT dni FROM usuario WHERE dni=:dni",":dni", self::getDni()))
