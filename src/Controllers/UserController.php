@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Config\ResponseHttp;
+use App\Models\UserModel;
+
 class UserController
 {
     private static $validate_rol ='/^[1,2,3]{1,1}$/';
@@ -57,7 +59,8 @@ class UserController
             }
             else
             {
-                echo json_encode(ResponseHttp::status200('Todos los parámetros correctos'));
+                new UserModel(($this->data));
+                echo json_encode(UserModel::post());
             }
             exit;
         }
