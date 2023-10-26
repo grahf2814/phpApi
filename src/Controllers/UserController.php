@@ -52,6 +52,25 @@ class UserController
             exit;
         }
     }
+
+    final public function getUser(string $endPoint)
+    {
+        if($this->method =='get' && $endPoint==$this->route)
+        {
+            Security::validateJWTToken($this->headers,Security::secretKey());
+
+            
+        }
+    }
+    final public function getAll(string $endPoint)
+    {
+        if($this->method =='get' && $endPoint==$this->route)
+        {
+            Security::validateJWTToken($this->headers,Security::secretKey());
+            echo json_encode(UserModel::getAll());
+            exit;
+        }
+    }
     final public function post(string $endPoint)
     {
         if($this->method =='post' && $endPoint==$this->route)

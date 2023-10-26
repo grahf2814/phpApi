@@ -13,5 +13,8 @@ $headers = getallheaders();
 
 $app = new UserController($method,$route,$params,$data,$headers);
 
+$app->getAll('user/');
+
+$app->getUser("user/{$params[1]}");
 $app->post('user/'); 
 echo json_encode(ResponseHttp::status404());

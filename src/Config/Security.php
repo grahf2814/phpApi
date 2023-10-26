@@ -30,7 +30,7 @@ class Security
         }
         else
         {
-            error_log("La constraseña es incorrecta");
+            error_log("La contraseña es incorrecta");
             return false;
         }
     }
@@ -39,7 +39,7 @@ class Security
     {
         $payload =array (
             "iat" => time(),
-            "exp" => time()+ (10),
+            "exp" => time()+ (60*60*15),
             "data"=> $data
         );
 
