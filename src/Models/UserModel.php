@@ -87,6 +87,34 @@ class UserModel extends ConnectionDB
         return '';
     }
 
+    final public static function getUser()
+    {
+        try
+        {
+            $con = self::getConnection();
+            $query= $con->prepare('SELECT * FROM usuario WHERE dni=:dni');
+
+            $query->execute([
+                ':dni'=>self::getDni()
+            ]);
+            if($query->rowCount()==0)
+            {
+                return ResponseHttp::status400('El DNI ingresado no está registrado');
+            }
+            else
+            {
+                $rs['data']= $query->fetchAll(\PDO::FETCH_ASSOC);
+                return $rs;
+            }
+            
+
+        }
+        catch(\PDOException $e)
+        {
+            error_log('UserModel::getUser->'.$e);
+            die(json_encode(ResponseHttp::status500("No se pudieron obtener los datos")));
+        }
+    } 
     final public static function getAll()
     {
         try

@@ -58,7 +58,25 @@ class UserController
         if($this->method =='get' && $endPoint==$this->route)
         {
             Security::validateJWTToken($this->headers,Security::secretKey());
-
+            
+            $dni = $this->params[1];
+            if(!isset($dni))
+            {
+                echo json_encode(ResponseHttp::status400('El campo DNI es requerido'));
+            }
+            else if(!preg_match(self::$validate_number,$dni))
+            {
+                echo json_encode(ResponseHttp::status400('EL DNI solo acepta números.'));
+            }
+            else
+            {
+                UserModel::setDni($dni);
+                echo json_encode(UserModel::getUser());
+                exit;
+            
+            }
+            
+            
             
         }
     }
