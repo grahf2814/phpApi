@@ -53,12 +53,50 @@ class UserController
         }
     }
 
+    final public function changePassword(string $endPoint)
+    {
+        if($this->method =='patch' && $endPoint==$this->route)
+        {
+            Security::validateJWTToken($this->headers,Security::secretKey());
+
+            $jwtUserData = Security::getJWTData();
+
+
+            if(empty($this->data['oldPassword']) || empty($this->data['newPassword'])  || empty($this->data['confirmNewPassword']))
+            {
+                echo json_encode(ResponseHttp::status400('Todos los campos son requeridos'));
+            }
+
+            else if(!UserModel::validateUserPassword($jwtUserData['IDToken'],$this->data['oldPassword']))    
+            {
+                echo json_encode(ResponseHttp::status400('El password anterior no coincide.'));
+            }
+            else if (strlen($this->data['newPassword'])< 8 || $this->data['confirmNewPassword'] <8 )
+            {
+                echo json_encode(ResponseHttp::status400('La contraseña debe tener al menos 8 caracteres.'));
+            }
+            else if ($this->data['newPassword'] !== $this->data['confirmNewPassword'])
+            {
+                echo json_encode(ResponseHttp::status400('Las contraseñas no coinciden.'));
+            }
+            else
+            {
+                UserModel::setIDToken($jwtUserData['IDToken']);
+                UserModel::setPassword($this->data['newPassword']);
+                echo json_encode(UserModel::changeUserPassword());
+            }
+
+
+        }  
+    }
     final public function getUser(string $endPoint)
     {
         if($this->method =='get' && $endPoint==$this->route)
         {
             Security::validateJWTToken($this->headers,Security::secretKey());
             
+
+
             $dni = $this->params[1];
             if(!isset($dni))
             {
@@ -128,6 +166,23 @@ class UserController
             {
                 new UserModel(($this->data));
                 echo json_encode(UserModel::post());
+            }
+            exit;
+        }
+    }
+    final public function deleteUser(string $endPoint)
+    {
+        if($this->method =='delete' && $endPoint==$this->route)
+        {
+            Security::validateJWTToken($this->headers,Security::secretKey());
+            if(empty($this->data['IDToken']))
+            {   
+                echo json_encode(ResponseHttp::status400('El Token de usaurio es requerido'));
+            }
+            else
+            {
+                UserModel::setIDToken($this->data['IDToken']);
+                echo json_encode(UserModel::deleteUser());
             }
             exit;
         }

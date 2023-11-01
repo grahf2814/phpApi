@@ -17,4 +17,6 @@ $app->getAll('user/');
 
 $app->getUser("user/{$params[1]}");
 $app->post('user/'); 
+$app->changePassword('user/password');
+$app->deleteUser('user/delete');
 echo json_encode(ResponseHttp::status404());

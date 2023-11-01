@@ -93,7 +93,6 @@ class UserModel extends ConnectionDB
         {
             $con = self::getConnection();
             $query= $con->prepare('SELECT * FROM usuario WHERE dni=:dni');
-
             $query->execute([
                 ':dni'=>self::getDni()
             ]);
@@ -115,6 +114,69 @@ class UserModel extends ConnectionDB
             die(json_encode(ResponseHttp::status500("No se pudieron obtener los datos")));
         }
     } 
+
+    final public static function validateUserPassword(string $IDToken,string $oldPassword)
+    {
+        try
+        {
+            $con= self::getConnection();
+            $query = $con->prepare("SELECT password FROM usuario WHERE IDToken = :IDToken");
+            $query->execute([
+                ':IDToken'=>$IDToken
+            ]);
+
+            if($query->rowCount()==0)
+            {
+                die(json_encode(ResponseHttp::status500()));
+            }
+            else
+            {
+                $res = $query->fetch(\PDO::FETCH_ASSOC);
+                if(Security::validatePassword($oldPassword,$res['password']))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+        }
+        catch(\PDOException $e)
+        {
+            error_log('UserModel::validateUserPassword->'.$e);
+            die(json_encode(ResponseHttp::status500()));
+        }
+    }
+
+    final public static function changeUserPassword()
+    {
+        try
+        {
+            $con = self::getConnection();
+            $query = $con->prepare("UPDATE usuario SET password = :password WHERE IDToken = :IDToken");
+            $query->execute(
+            [
+                ':password' => Security::createPassword(self::getPassword()),
+                ':IDToken' => self::getIDToken()
+            ]);
+            if($query->rowCount()>0)
+            {
+                return ResponseHttp::status200('Contraseña actualizada exitosamente');
+            }
+            else
+            {
+                return ResponseHttp::status500('Error al Actualizar la contraseña de usuario');
+            }
+        }
+        catch(\PDOException $e)
+        {
+            error_log('UserModel::changePassword->'.$e);
+            die(json_encode(ResponseHttp::status500("No se pudieron obtener los datos")));
+        }
+    }
+    
     final public static function getAll()
     {
         try
@@ -180,6 +242,34 @@ class UserModel extends ConnectionDB
                 die(json_encode(ResponseHttp::status500()));
             }
         }
+    }
+
+    final public static function deleteUser()
+    {
+        try
+        {
+            $con = self::getConnection();
+            $query = $con->prepare("DELETE FROM usuario WHERE IDToken = :IDToken");
+            $query->execute
+            (
+                [
+                    ':IDToken'=> self::getIDToken()
+                ]
+            );
+            if($query->rowCount()>0)
+            {
+                return ResponseHttp::status200("Usuario eliminado exitosamente");
+            }
+            else
+            {
+                return ResponseHttp::status200("No se pudo eliminar al usuario");
+            }
+        }
+        catch(\PDOException $e)
+            {
+                error_log('USerModel::deleteUser->'.$e);
+                die(json_encode(ResponseHttp::status500()));
+            }
     }
 
 }
