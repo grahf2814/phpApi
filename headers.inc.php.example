@@ -1,0 +1,8 @@
+<?php
+use App\Config\ErrorLog;
+use App\Config\ResponseHttp;
+//------------------------ CROSS ORIGIN PARA AMBIENTE DE DESARROLLO
+//ResponseHttp::headerHttpDev($_SERVER['REQUEST_METHOD']);
+//------------------------ CROSS ORIGIN PARA AMBIENTE DE PRODUCCIÓN
+ResponseHttp::headerHttpProd($_SERVER['REQUEST_METHOD'],$_SERVER['HTTP_ORIGIN']);
+

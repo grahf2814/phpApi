@@ -4,6 +4,9 @@ use App\Config\ErrorLog;
 use App\Config\ResponseHttp;
 
 require __DIR__.'/vendor/autoload.php';
+//----------------------------- PARA LOS HEADERS
+//require __DIR__.'/headers.inc.php';
+ResponseHttp::headerHttpProd($_SERVER['REQUEST_METHOD'],$_SERVER['HTTP_ORIGIN']);
 
 ErrorLog::activateErrorLog();
 

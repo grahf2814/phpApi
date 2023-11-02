@@ -7,6 +7,61 @@ class ResponseHttp
         'status'=>'',
         'message'=>''
     );
+
+    
+    final public static function headerHttpProd($method,$origin)
+    {
+        
+        if(!isset($origin))
+        {
+            die(json_encode(ResponseHttp::status401('No tiene autorización para consumir esta API'),JSON_UNESCAPED_UNICODE));
+        }
+        
+        $list = [''];
+
+
+        if (in_array($origin,$list))
+        {
+            if($method=='OPTIONS')
+            {
+                header("Access-Control-Allow-Origin: $origin");
+                header('Access-Control-Allow-Methods: GET,PUT,POST,PATCH,DELETE');
+                header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Authorization"); 
+                exit(0);
+            }
+            else
+            {
+                header("Access-Control-Allow-Origin: $origin");
+                    header('Access-Control-Allow-Methods: GET,PUT,POST,PATCH,DELETE');
+                    header("Allow: GET, POST, OPTIONS, PUT, PATCH , DELETE");
+                    header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Authorization"); 
+                    header('Content-Type: application/json; charset=utf-8');
+            }
+        }
+        else 
+        {
+            die(json_encode(ResponseHttp::status401('No tiene autorizacion para consumir esta API'),JSON_UNESCAPED_UNICODE));
+        }      
+        
+    }
+    
+    
+    
+    final public static function headerHttpDev($method)
+    {
+        if($method=='OPTIONS')
+        {
+            exit(0);
+        }
+
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET,PUT,POST,PATCH,DELETE');
+        header("Allow: GET, POST, OPTIONS, PUT, PATCH , DELETE");
+        header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header('Content-Type: application/json; charset=utf-8');  
+    }
+
+
     final public static function status200( $res)
     {
         http_response_code(200);
