@@ -11,6 +11,7 @@ class ConnectionDB
     private static $host = '';
     private static $user = '';
     private static $password = '';
+    
     final public static function from($host,$user,$password)
     {
         self::$host=$host;
