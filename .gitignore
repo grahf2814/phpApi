@@ -5,5 +5,5 @@ public/Images/*.png
 public/Images/*.jpeg
 public/Images/*.bmp
 public/Images/*.gif
-vendor/*.*
+vendor/
 
