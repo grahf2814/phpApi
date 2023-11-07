@@ -31,7 +31,7 @@ class ResponseHttp
             }
             else
             {
-                header("Access-Control-Allow-Origin: $origin");
+                    header("Access-Control-Allow-Origin: $origin");
                     header('Access-Control-Allow-Methods: GET,PUT,POST,PATCH,DELETE');
                     header("Allow: GET, POST, OPTIONS, PUT, PATCH , DELETE");
                     header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Authorization"); 

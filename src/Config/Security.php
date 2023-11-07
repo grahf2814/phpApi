@@ -4,6 +4,7 @@ namespace App\Config;
 use Dotenv\DotEnv;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Bulletproof\Image;
 
 class Security
 {
@@ -76,5 +77,52 @@ class Security
         return $jwt_decoded_array['data'];
         exit;
     } 
+    /***********Subir Imagen al servidor**************/
+    final public static function uploadImage($file,$name)
+    {
+        $file = new Image($file);
+
+        $file->setMime(array('png','jpg','jpeg'));//formatos admitidos
+        $file->setSize(10000,500000);//Tamaño admitidos es Bytes
+        $file->setDimension(200,200);//Dimensiones admitidas en Pixeles
+        $file->setStorage('public/Images');//Ubicación de la carpeta
+
+        if ($file[$name]) {
+            $upload = $file->upload();            
+            if ($upload) {
+                $imgUrl = UrlBase::urlBase .'/public/Images/'. $upload->getName().'.'.$upload->getMime();
+                $data = [
+                    'path' => $imgUrl,
+                    'name' => $upload->getName() .'.'. $upload->getMime()
+                ];
+                return $data;               
+            } else {
+                die(json_encode(ResponseHttp::status400($file->getError())));               
+            }
+        }
+    }
+
+    /***********************Subir fotos en base64***************************/
+    final public static function uploadImageBase64(array $data, string $name) 
+    {        
+        $token = bin2hex(random_bytes(32).time()); 
+        $name_img = $token . '.png';
+        $route = dirname(__DIR__, 2) . "/public/Images/{$name_img}";        
     
+        //Decodificamos la imagen
+        $img_decoded = base64_decode(
+            preg_replace('/^[^,]*,/', '', $data[$name])
+        );
+    
+        $v = file_put_contents($route,$img_decoded);
+    
+        //Validamos si se subio la imagen
+        if ($v) {
+            return UrlBase::urlBase . "/public/Images/{$name_img}";
+        } else {
+            unlink($route);
+            die(json_encode(ResponseHttp::status500('No se puede subir la imagen')));
+        }   
+        
+    }
 }

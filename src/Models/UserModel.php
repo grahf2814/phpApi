@@ -14,7 +14,7 @@ class UserModel extends ConnectionDB
     private static int $rol;
     private static string $password;
     private static string $IDToken;
-    private static string $fecha;
+
 
 
     public function __construct(array $data)
@@ -33,7 +33,7 @@ class UserModel extends ConnectionDB
     final public static function getRol(){ return self::$rol;}
     final public static function getPassword(){ return self::$password;}
     final public static function getIDToken(){ return self::$IDToken;}
-    final public static function getDate(){ return self::$fecha;}
+
 
     final public static function setName(string $name){ self::$nombre=$name;}
     final public static function setDni(string $dni){ self::$dni=$dni;}
@@ -41,7 +41,7 @@ class UserModel extends ConnectionDB
     final public static function setRol(int $rol){ self::$rol=$rol;}
     final public static function setPassword(string $password){ self::$password=$password;}
     final public static function setIDToken(string $IDToken){ self::$IDToken=$IDToken;}
-    final public static function setDate(string $date){ self::$fecha=$date;}
+
 
     final public static function login()
     {
@@ -208,7 +208,7 @@ class UserModel extends ConnectionDB
         else
         {
             self::setIDToken(hash('sha512',self::getDni(),self::getEmail()));
-            self::SetDate(date("d-m-y H:i:s"));
+            
             try
             {
                 $con = self::getConnection();
@@ -224,8 +224,8 @@ class UserModel extends ConnectionDB
                         ':correo'=>self::getEmail(),
                         ':rol'=>self::getRol(),
                         ':password'=>Security::createPassword(self::getPassword()),
-                        ':IDToken'=>self::getIDToken(),
-                        ':fecha'=>self::getDate()
+                        ':IDToken'=>self::getIDToken()
+                        
                     ]);
                 if($query->rowCount()>0)
                 {

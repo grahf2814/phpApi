@@ -1,7 +1,8 @@
 {
     "require": {
         "vlucas/phpdotenv": "^5.5",
-        "firebase/php-jwt": "^6.9"
+        "firebase/php-jwt": "^6.9",
+        "samayo/bulletproof": "5.0.1"
     },
     "autoload":
     {
