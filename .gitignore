@@ -1,2 +1,8 @@
 src/Logs/php-error.log
 headers.inc.php
+public/Images/*.jpg
+public/Images/*.png
+public/Images/*.jpeg
+public/Images/*.bmp
+public/Images/*.gif
+
