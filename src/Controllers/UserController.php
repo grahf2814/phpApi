@@ -8,9 +8,9 @@ use App\Models\UserModel;
 
 class UserController
 {
-    private static $validate_rol ='/^[1,2,3]{1,1}$/';
-    private static $validate_number ='/^[0-9]+$/';
-    private static $validate_text ='/^[a-zA-Z]+$/';
+    private  $validate_rol ='/^[1,2,3]{1,1}$/';
+    private  $validate_number ='/^[0-9]+$/';
+    private  $validate_text ='/^[a-zA-Z]+$/';
 
     public function __construct(
         private string $method,
@@ -139,11 +139,11 @@ class UserController
                 echo json_encode(ResponseHttp::status400('Todos los campos son requeridos.'),JSON_UNESCAPED_UNICODE);
 
             }
-            else if (!preg_match(self::$validate_text,$this->data['name']))
+            else if (!preg_match($this->validate_text,$this->data['name']))
             {
                 echo json_encode(ResponseHttp::status400('El campo nombre solo admite texto.'),JSON_UNESCAPED_UNICODE);
             }
-            else if (!preg_match(self::$validate_number,$this->data['dni']))
+            else if (!preg_match($this->validate_number,$this->data['dni']))
             {
                 echo json_encode(ResponseHttp::status400('El campo dni solo adminte números.'),JSON_UNESCAPED_UNICODE);
             }
@@ -151,7 +151,7 @@ class UserController
             {
                 echo json_encode(ResponseHttp::status400('Formato de correo incorrecto.'),JSON_UNESCAPED_UNICODE);
             }
-            else if (!preg_match(self::$validate_rol,$this->data['rol']))
+            else if (!preg_match($this->validate_rol,$this->data['rol']))
             {
                 echo json_encode(ResponseHttp::status400('Rol Inválido.'),JSON_UNESCAPED_UNICODE);
             }

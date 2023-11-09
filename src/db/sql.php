@@ -6,11 +6,15 @@ use App\Config\ResponseHttp;
 
 class Sql extends SQLDBConnection
 {
-    public static function exists(string $request, string $condition, $param)
+    public function __construct()
+    {
+        parent::__construct('','mysql');
+    }
+    public function exists(string $request, string $condition, $param)
     {
         try
         {
-            $con = self::getConnection();
+            $con = $this->getConnection();
             $query = $con->prepare($request);
             $query->execute([
                 $condition =>$param]

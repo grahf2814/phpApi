@@ -10,11 +10,11 @@ use App\DB\Sql;
 class UserModel extends SQLDBConnection
 {
     private string $nombre; 
-    private static string $dni;
-    private static string $correo;
-    private static int $rol;
-    private static string $password;
-    private static string $IDToken;
+    private string $dni;
+    private string $correo;
+    private int $rol;
+    private string $password;
+    private string $IDToken;
 
 
 
@@ -194,44 +194,44 @@ class UserModel extends SQLDBConnection
         }
     }
 
-    final public static function post($data)
+    final public function post($data)
     {
         
         
-        self::$nombre=$data['name'];
-        self::$dni=$data['dni'];
-        self::$correo=$data['email'];
-        self::$rol=$data['rol'];
-        self::$password=$data['password'];
-        
-        if(Sql::exists("SELECT dni FROM usuario WHERE dni=:dni",":dni", self::getDni()))
+        $this->nombre=$data['name'];
+        $this->dni=$data['dni'];
+        $this->correo=$data['email'];
+        $this->rol=$data['rol'];
+        $this->password=$data['password'];
+        $sql=new Sql();
+                if($sql->exists("SELECT dni FROM usuario WHERE dni=:dni",":dni", self::getDni()))
         {
             return ResponseHttp::status400("El DNI ya está registrado");
         }
-        else if (Sql::exists("SELECT correo FROM usuario WHERE correo=:correo",":correo", self::getEmail())) 
+        else if ($sql->exists("SELECT correo FROM usuario WHERE correo=:correo",":correo", self::getEmail())) 
         {
             return ResponseHttp::status400("El Correo ya está registrado");
         }
         else
         {
-            self::setIDToken(hash('sha512',self::getDni(),self::getEmail()));
+            $this->setIDToken(hash('sha512',self::getDni(),self::getEmail()));
             
             try
             {
-                $con = self::getConnection();
-                $query1 = "INSERT INTO usuario (nombre,dni,correo,rol,password,IDToken,fecha) VALUES ";
-                $query2 = "(:nombre,:dni,:correo,:rol,:password,:IDToken,:fecha)";
+                $con = $this->getConnection();
+                $query1 = "INSERT INTO usuario (nombre,dni,correo,rol,password,IDToken) VALUES ";
+                $query2 = "(:nombre,:dni,:correo,:rol,:password,:IDToken)";
 
                 $query = $con->prepare($query1.$query2);
 
                 $query->execute(
                     [
-                        ':nombre'=>self::getName(),
-                        ':dni'=>self::getDni(),
-                        ':correo'=>self::getEmail(),
-                        ':rol'=>self::getRol(),
+                        ':nombre'=>$this->getName(),
+                        ':dni'=>$this->getDni(),
+                        ':correo'=>$this->getEmail(),
+                        ':rol'=>$this->getRol(),
                         ':password'=>Security::createPassword(self::getPassword()),
-                        ':IDToken'=>self::getIDToken()
+                        ':IDToken'=>$this->getIDToken()
                         
                     ]);
                 if($query->rowCount()>0)
