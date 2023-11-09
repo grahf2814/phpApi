@@ -4,10 +4,10 @@ namespace App\Models;
 
 use App\Config\ResponseHttp;
 use App\Config\Security;
-use App\db\ConnectionDB;
+use App\db\SQLDBConnection;
 use App\DB\Sql;
 
-class ProductModel extends ConnectionDB
+class ProductModel extends SQLDBConnection
 {
     private static string $name;
     private static string $description;

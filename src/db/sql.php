@@ -4,7 +4,7 @@ namespace App\db;
 
 use App\Config\ResponseHttp;
 
-class Sql extends ConnectionDB
+class Sql extends SQLDBConnection
 {
     public static function exists(string $request, string $condition, $param)
     {

@@ -43,9 +43,10 @@ class UserController
             }
             else
             {
-                UserModel::setEmail($email);
-                UserModel::setPassword($password);
-                echo json_encode(UserModel::login(),JSON_UNESCAPED_UNICODE);
+                $userModel = new UserModel();
+                $userModel->setEmail($email);
+                $userModel->setPassword($password);
+                echo json_encode($userModel->login(),JSON_UNESCAPED_UNICODE);
                 
             } 
 
@@ -164,8 +165,8 @@ class UserController
             }
             else
             {
-                new UserModel(($this->data));
-                echo json_encode(UserModel::post(),JSON_UNESCAPED_UNICODE);
+                $user = new UserModel();
+                echo json_encode($user->post($this->data),JSON_UNESCAPED_UNICODE);
             }
             exit;
         }

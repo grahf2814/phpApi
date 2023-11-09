@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Config\ResponseHttp;
 use App\Config\Security;
-use App\db\ConnectionDB;
+use App\db\SQLDBConnection;
 use App\DB\Sql;
-class UserModel extends ConnectionDB
+
+class UserModel extends SQLDBConnection
 {
-    private static string $nombre; 
+    private string $nombre; 
     private static string $dni;
     private static string $correo;
     private static int $rol;
@@ -17,41 +18,39 @@ class UserModel extends ConnectionDB
 
 
 
-    public function __construct(array $data)
+    public function __construct()
     {
-        self::$nombre=$data['name'];
-        self::$dni=$data['dni'];
-        self::$correo=$data['email'];
-        self::$rol=$data['rol'];
-        self::$password=$data['password'];
-        
+        parent::__construct('','mysql');
+
+        /*
+        */
     }
 
-    final public static function getName(){ return self::$nombre;}
-    final public static function getDni(){ return self::$dni;}
-    final public static function getEmail(){ return self::$correo;}
-    final public static function getRol(){ return self::$rol;}
-    final public static function getPassword(){ return self::$password;}
-    final public static function getIDToken(){ return self::$IDToken;}
+    final public function getName(){ return $this->nombre;}
+    final public function getDni(){ return $this->dni;}
+    final public function getEmail(){ return $this->correo;}
+    final public function getRol(){ return $this->rol;}
+    final public function getPassword(){ return $this->password;}
+    final public function getIDToken(){ return $this->IDToken;}
 
 
-    final public static function setName(string $name){ self::$nombre=$name;}
-    final public static function setDni(string $dni){ self::$dni=$dni;}
-    final public static function setEmail(string $email){ self::$correo=$email;}
-    final public static function setRol(int $rol){ self::$rol=$rol;}
-    final public static function setPassword(string $password){ self::$password=$password;}
-    final public static function setIDToken(string $IDToken){ self::$IDToken=$IDToken;}
+    final public function setName(string $name){ $this->nombre=$name;}
+    final public function setDni(string $dni){ $this->dni=$dni;}
+    final public function setEmail(string $email){ $this->correo=$email;}
+    final public function setRol(int $rol){ $this->rol=$rol;}
+    final public function setPassword(string $password){ $this->password=$password;}
+    final public function setIDToken(string $IDToken){ $this->IDToken=$IDToken;}
 
 
-    final public static function login()
+    final public function login()
     {
         
         try
         {
-            $con = self::getConnection()->prepare("SELECT * FROM usuario where correo=:correo");
+            $con = $this->getConnection()->prepare("SELECT * FROM usuario where correo=:correo");
             $con->execute(
                 [
-                    ':correo'=>self::getEmail()
+                    ':correo'=>$this->getEmail()
                 ]
                 );
             if($con->rowCount()===0)
@@ -87,11 +86,11 @@ class UserModel extends ConnectionDB
         return '';
     }
 
-    final public static function getUser()
+    final public function getUser()
     {
         try
         {
-            $con = self::getConnection();
+            $con = $this->getConnection();
             $query= $con->prepare('SELECT * FROM usuario WHERE dni=:dni');
             $query->execute([
                 ':dni'=>self::getDni()
@@ -195,8 +194,16 @@ class UserModel extends ConnectionDB
         }
     }
 
-    final public static function post()
+    final public static function post($data)
     {
+        
+        
+        self::$nombre=$data['name'];
+        self::$dni=$data['dni'];
+        self::$correo=$data['email'];
+        self::$rol=$data['rol'];
+        self::$password=$data['password'];
+        
         if(Sql::exists("SELECT dni FROM usuario WHERE dni=:dni",":dni", self::getDni()))
         {
             return ResponseHttp::status400("El DNI ya está registrado");
