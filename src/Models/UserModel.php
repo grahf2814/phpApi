@@ -93,7 +93,7 @@ class UserModel extends SQLDBConnection
             $con = $this->getConnection();
             $query= $con->prepare('SELECT * FROM usuario WHERE dni=:dni');
             $query->execute([
-                ':dni'=>self::getDni()
+                ':dni'=>$this->getDni()
             ]);
             if($query->rowCount()==0)
             {
@@ -114,11 +114,11 @@ class UserModel extends SQLDBConnection
         }
     } 
 
-    final public static function validateUserPassword(string $IDToken,string $oldPassword)
+    final public function validateUserPassword(string $IDToken,string $oldPassword)
     {
         try
         {
-            $con= self::getConnection();
+            $con= $this->getConnection();
             $query = $con->prepare("SELECT password FROM usuario WHERE IDToken = :IDToken");
             $query->execute([
                 ':IDToken'=>$IDToken
@@ -149,11 +149,11 @@ class UserModel extends SQLDBConnection
         }
     }
 
-    final public static function changeUserPassword()
+    final public function changeUserPassword()
     {
         try
         {
-            $con = self::getConnection();
+            $con = $this->getConnection();
             $query = $con->prepare("UPDATE usuario SET password = :password WHERE IDToken = :IDToken");
             $query->execute(
             [
@@ -176,11 +176,11 @@ class UserModel extends SQLDBConnection
         }
     }
     
-    final public static function getAll()
+    final public function getAll()
     {
         try
         {
-            $con = self::getConnection();
+            $con = $this->getConnection();
             $query= $con->prepare('SELECT * FROM usuario');
             $query->execute();
             $rs['data']= $query->fetchAll(\PDO::FETCH_ASSOC);

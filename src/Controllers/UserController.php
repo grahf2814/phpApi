@@ -20,7 +20,6 @@ class UserController
         private $headers
     )
     {
-
     }
 
 
@@ -58,8 +57,8 @@ class UserController
     {
         if($this->method =='patch' && $endPoint==$this->route)
         {
+            $userModel = new UserModel();
             Security::validateJWTToken($this->headers,Security::secretKey());
-
             $jwtUserData = Security::getJWTData();
 
 
@@ -68,7 +67,7 @@ class UserController
                 echo json_encode(ResponseHttp::status400('Todos los campos son requeridos'),JSON_UNESCAPED_UNICODE);
             }
 
-            else if(!UserModel::validateUserPassword($jwtUserData['IDToken'],$this->data['oldPassword']))    
+            else if(!$userModel->validateUserPassword($jwtUserData['IDToken'],$this->data['oldPassword']))    
             {
                 echo json_encode(ResponseHttp::status400('El password anterior no coincide.'),JSON_UNESCAPED_UNICODE);
             }
@@ -82,12 +81,12 @@ class UserController
             }
             else
             {
-                UserModel::setIDToken($jwtUserData['IDToken']);
-                UserModel::setPassword($this->data['newPassword']);
-                echo json_encode(UserModel::changeUserPassword(),JSON_UNESCAPED_UNICODE);
+                
+                $userModel->setIDToken($jwtUserData['IDToken']);
+                $userModel->setPassword($this->data['newPassword']);
+                echo json_encode($userModel->changeUserPassword(),JSON_UNESCAPED_UNICODE);
             }
-
-
+            exit;
         }  
     }
     final public function getUser(string $endPoint)
@@ -103,20 +102,17 @@ class UserController
             {
                 echo json_encode(ResponseHttp::status400('El campo DNI es requerido'),JSON_UNESCAPED_UNICODE);
             }
-            else if(!preg_match(self::$validate_number,$dni))
+            else if(!preg_match($this->validate_number,$dni))
             {
                 echo json_encode(ResponseHttp::status400('EL DNI solo acepta números.'),JSON_UNESCAPED_UNICODE);
             }
             else
             {
-                UserModel::setDni($dni);
-                echo json_encode(UserModel::getUser());
+                $userModel = new UserModel();
+                $userModel->setDni($dni);
+                echo json_encode($userModel->getUser());
                 exit;
-            
             }
-            
-            
-            
         }
     }
     final public function getAll(string $endPoint)
@@ -124,7 +120,9 @@ class UserController
         if($this->method =='get' && $endPoint==$this->route)
         {
             Security::validateJWTToken($this->headers,Security::secretKey());
-            echo json_encode(UserModel::getAll(),JSON_UNESCAPED_UNICODE);
+            
+            $userModel = new UserModel();
+            echo json_encode($userModel->getAll(),JSON_UNESCAPED_UNICODE);
             exit;
         }
     }
