@@ -9,42 +9,47 @@ use App\DB\Sql;
 
 class ProductModel extends SQLDBConnection
 {
-    private static string $name;
-    private static string $description;
-    private static $stock;
-    private static $file;
-    private static string $url;
-    private static string $imageName;
-    private static string $IDtoken;
+    private string $name;
+    private string $description;
+    private $stock;
+    private $file;
+    private string $url;
+    private string $imageName;
+    private string $IDtoken;
     
-    public function __construct(array $data, $file)    
+    public function __construct()    
     {   
-        self::$name = $data['name'];
-        self::$description=$data['description'];
-        self::$stock = $data['stock'];
-        self::$file = $file;
+        
+        parent::__construct('','mysql');
+        
     }
     /************************Metodos Getter**************************/
-    final public static function getName(){ return self::$name;}
-    final public static function getDescription(){ return self::$description;}
-    final public static function getStock(){ return self::$stock;}
-    final public static function getFile(){ return self::$file;}
-    final public static function getUrl(){ return self::$url;}
-    final public static function getImageName(){ return self::$imageName;}
-    final public static function getIDtoken(){ return self::$IDtoken;}
+    final public function getName(){ return $this->name;}
+    final public function getDescription(){ return $this->description;}
+    final public function getStock(){ return $this->stock;}
+    final public function getFile(){ return $this->file;}
+    final public function getUrl(){ return $this->url;}
+    final public function getImageName(){ return $this->imageName;}
+    final public function getIDtoken(){ return $this->IDtoken;}
 
     /**********************************Metodos Setter***********************************/
-    final public static function setName(string $name) { self::$name = $name;}
-    final public static function setDescription(string $description) { self::$description = $description;}
-    final public static function setStock(string $stock) { self::$stock = $stock;}
-    final public static function setFile(string $file) { self::$file = $file;}
-    final public static function setUrl(string $url) { self::$url = $url;} 
-    final public static function setImageName(string $imageName) { self::$imageName = $imageName;}  
-    final public static function setIDtoken(string $IDtoken) { self::$IDtoken = $IDtoken;}
+    final public function setName(string $name) { $this->name = $name;}
+    final public function setDescription(string $description) { $this->description = $description;}
+    final public function setStock(string $stock) { $this->stock = $stock;}
+    final public function setFile(string $file) { $this->file = $file;}
+    final public function setUrl(string $url) { $this->url = $url;} 
+    final public function setImageName(string $imageName) { $this->imageName = $imageName;}  
+    final public function setIDtoken(string $IDtoken) { $this->IDtoken = $IDtoken;}
 
-    final public static function postSave()
+    final public function postSave(array $data, $file)
     {
-        if(Sql::exists("SELECT name FROM productos WHERE name = :name",':name',self::getName()))
+        
+        $this->name = $data['name'];
+        $this->description=$data['description'];
+        $this->stock = $data['stock'];
+        $this->file = $file;
+        $sql=new Sql();
+        if($sql->exists("SELECT name FROM productos WHERE name = :name",':name',$this->getName()))
         {
             return ResponseHttp::status400('El producto ya está registrado');
         }
@@ -52,20 +57,20 @@ class ProductModel extends SQLDBConnection
         {
             try
             {
-                $resImg = Security::uploadImage(self::getFile(),'product');
-                self::setUrl($resImg['path']);
-                self::setImageName($resImg['name']);
-                self::setIDtoken(hash('sha512',self::getName().self::getUrl()));
+                $resImg = Security::uploadImage($this->getFile(),'product');
+                $this->setUrl($resImg['path']);
+                $this->setImageName($resImg['name']);
+                $this->setIDtoken(hash('sha512',$this->getName().$this->getUrl()));
 
-                $con = self::getConnection();
+                $con = $this->getConnection();
                 $query = $con->prepare('INSERT INTO productos(name,descripcion,stock,url,imageName,IDtoken) VALUES (:name,:description,:stock,:url,:imageName,:IDtoken)');
                 $query->execute([
-                    ':name'        => self::getName(),
-                    ':description' => self::getDescription(),
-                    ':stock'       => self::getStock(),
-                    ':url'         => self::getUrl(),
-                    ':imageName'   => self::getImageName(),
-                    ':IDtoken'     => self::getIDtoken()
+                    ':name'        => $this->getName(),
+                    ':description' => $this->getDescription(),
+                    ':stock'       => $this->getStock(),
+                    ':url'         => $this->getUrl(),
+                    ':imageName'   => $this->getImageName(),
+                    ':IDtoken'     => $this->getIDtoken()
                 ]);
                 
                 if ($query->rowCount() > 0) {

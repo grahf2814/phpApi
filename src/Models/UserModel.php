@@ -196,8 +196,6 @@ class UserModel extends SQLDBConnection
 
     final public function post($data)
     {
-        
-        
         $this->nombre=$data['name'];
         $this->dni=$data['dni'];
         $this->correo=$data['email'];
@@ -251,16 +249,16 @@ class UserModel extends SQLDBConnection
         }
     }
 
-    final public static function deleteUser()
+    final public function deleteUser()
     {
         try
         {
-            $con = self::getConnection();
+            $con = $this->getConnection();
             $query = $con->prepare("DELETE FROM usuario WHERE IDToken = :IDToken");
             $query->execute
             (
                 [
-                    ':IDToken'=> self::getIDToken()
+                    ':IDToken'=> $this->getIDToken()
                 ]
             );
             if($query->rowCount()>0)

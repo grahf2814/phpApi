@@ -176,12 +176,13 @@ class UserController
             Security::validateJWTToken($this->headers,Security::secretKey());
             if(empty($this->data['IDToken']))
             {   
-                echo json_encode(ResponseHttp::status400('El Token de usaurio es requerido'),JSON_UNESCAPED_UNICODE);
+                echo json_encode(ResponseHttp::status400('El Token de usuario es requerido'),JSON_UNESCAPED_UNICODE);
             }
             else
             {
-                UserModel::setIDToken($this->data['IDToken']);
-                echo json_encode(UserModel::deleteUser(),JSON_UNESCAPED_UNICODE);
+                $user = new UserModel();
+                $user->setIDToken($this->data['IDToken']);
+                echo json_encode($user->deleteUser(),JSON_UNESCAPED_UNICODE);
             }
             exit;
         }

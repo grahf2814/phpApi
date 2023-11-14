@@ -48,8 +48,8 @@ class ProductController
             }
             else
             {
-                new ProductModel($this->data,$_FILES);
-                echo json_encode(ProductModel::postSave());
+                $product = new ProductModel();
+                echo json_encode($product->postSave($this->data,$_FILES));
             }
             exit;
 
