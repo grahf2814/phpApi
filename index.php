@@ -16,8 +16,10 @@ if(isset($_GET['route']))
     $list = [
         'auth',
         'user',
-        'product'
+        'product',
+        'version'
     ];
+    error_log("URL:".$url[0].',lista:'.$list);
     $file = __DIR__.'/src/Routes/'.$url[0].'.php';
     if(!in_array($url[0],$list))
     {

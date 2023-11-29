@@ -2,7 +2,8 @@
     "require": {
         "vlucas/phpdotenv": "^5.5",
         "firebase/php-jwt": "^6.9",
-        "samayo/bulletproof": "5.0.1"
+        "samayo/bulletproof": "5.0.1",
+        "mongodb/mongodb": "^1.17"
     },
     "autoload":
     {
